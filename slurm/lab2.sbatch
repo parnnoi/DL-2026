@@ -27,4 +27,4 @@ echo "Python executable location: $(which python)"
 echo "Python version: $(python --version)"
 
 echo "=== Execution ==="
-python "$DIRECTORY_LAB/$LAB_SPECIFY/lab.py"
+python "$DIRECTORY_LAB$LAB_SPECIFY/lab.py"

@@ -9,16 +9,10 @@
 #SBATCH --time=00:02:00
 
 DIRECTORY_VENV_ACTIVATE="$HOME/DeepLearning/venv/bin/activate"
-DIRECTORY_REPO="$HOME/DeepLearning/src/"
-DIRECTORY_LAB="$HOME/DeepLearning/src/ab"
+DIRECTORY_LAB="$HOME/DeepLearning/src/Lab"
 LAB_SPECIFY="2"
 
 set -euo pipefail
-
-cd $DIRECTORY_REPO
-
-echo "=== Git ==="
-git pull
 
 cd $HOME
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=my_helloworld_but_who_am_i
+#SBATCH --job-name=Pipat_Lab2
 #SBATCH --output=logs/%j.log
 #SBATCH --error=logs/%j.err
 #SBATCH --partition=gpu4090
@@ -8,14 +8,14 @@
 #SBATCH --gres=gpu:1
 #SBATCH --time=00:02:00
 
-DIRECTORY_VENV="$HOME/deep_learning/my_env"
-DIRECTORY_REPO="$HOME/deep_learning/src/DL-2026"
-DIRECTORY_LAB="$HOME/deep_learning/src/DL-2026/Lab"
+DIRECTORY_VENV_ACTIVATE="$HOME/DeepLearning/venv/bin/activate"
+DIRECTORY_REPO="$HOME/DeepLearning/src/"
+DIRECTORY_LAB="$HOME/DeepLearning/src/ab"
 LAB_SPECIFY="2"
 
 set -euo pipefail
 
-cd "$DIRECTORY_REPO"
+cd $DIRECTORY_REPO
 
 echo "=== Git ==="
 git pull
@@ -26,7 +26,7 @@ echo "=== Host ==="
 echo "Job executed on: $(hostname)"
 echo "Job started on: $(date)"
 
-source "$DIRECTORY_VENV/bin/activate"
+source $DIRECTORY_VENV_ACTIVATE
 
 echo "=== Python ==="
 echo "Python executable location: $(which python)"

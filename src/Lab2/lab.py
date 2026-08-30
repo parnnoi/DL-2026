@@ -26,8 +26,8 @@ my_core = core_selected("GPU")
 #1.1 random m*n with float32 -> move to gpu -> how much memory used
 
 opod = one_point_one_data = {"m": 10000,
-                      "n": 3000,
-                      "core": "GPU"}
+                             "n": 3000,
+                             "core": "GPU"}
 opod_core = core_selected(opod["core"])
 opom = one_point_one_matrix = torch.rand(opod["m"], opod["n"], dtype=torch.float32, device=opod_core)
 print(f"Currently operation on {opod_core}/{opod["core"]} | Data type is {opom.dtype} | Size per elements in bytes : {opom.element_size()} | Memory Usages: {opom.element_size() * opom.nelement()}")
@@ -40,13 +40,13 @@ print(f"Currently operation on {opod_core}/{opod["core"]} | Data type is {optm.d
 
 #-----------------
 
-torch.cuda.memory._record_memory_history(max_entries=100000)
+# torch.cuda.memory._record_memory_history(max_entries=100000)
 
 #2.1 createe m*n and n*k with float32 move to gpu and @
 
-tpod = two_point_one_data = {"m": 10000,
-                             "n": 3500,
-                             "k": 7500,
+tpod = two_point_one_data = {"m": 100,
+                             "n": 35,
+                             "k": 75,
                              "core": "GPU"}
 
 tpod_core = core_selected(tpod["core"])
@@ -77,15 +77,15 @@ print(f"\n2.4 The comparisom of matrix multiply with difference data type " \
       f"\n\t Data type {tptm.dtype} have the first (0, 0) result is {tptm[0][0]} " \
       f"\n\t Data type {tp3m.dtype} have the first (0, 0) result is {tp3m[0][0]} ")
 
-torch.cuda.memory._dump_snapshot("2_1_to_2_4.pickle")
-torch.cuda.memory._record_memory_history(enabled=None)
+# torch.cuda.memory._dump_snapshot("2_1_to_2_4.pickle")
+# torch.cuda.memory._record_memory_history(enabled=None)
 
 #2.5 do again but mul all data with 100
 
-torch.cuda.memory._record_memory_history(max_entries=100000)
+# torch.cuda.memory._record_memory_history(max_entries=100000)
 
-tpf_oma = tpoma * 100
-tpf_omb = tpomb * 100
+tpf_oma = tpoma * 100.0
+tpf_omb = tpomb * 100.0
 tpf_om = tpf_oma @ tpf_omb
 
 tpf_tma = tpf_oma.to(torch.float16)
@@ -97,12 +97,12 @@ tpf_3mb = tpf_omb.to(torch.bfloat16)
 tpf_3m = tpf_3ma @ tpf_3mb
 
 print(f"\n2.5 The comparisom of matrix multiply with difference data type (While factor 100)" \
-      f"\n\t Data type {tpf_om.dtype} have the first (0, 0) result is {tpf_om[0][0]} " \
-      f"\n\t Data type {tpf_tm.dtype} have the first (0, 0) result is {tpf_tm[0][0]} " \
-      f"\n\t Data type {tpf_3m.dtype} have the first (0, 0) result is {tpf_3m[0][0]} ")
+      f"\n\t Data type {tpf_om.dtype} have the first (0, 0) result is {tpf_om[0][0]:.2f} " \
+      f"\n\t Data type {tpf_tm.dtype} have the first (0, 0) result is {tpf_tm[0][0]:.2f} " \
+      f"\n\t Data type {tpf_3m.dtype} have the first (0, 0) result is {tpf_3m[0][0]:.2f} ")
 
-torch.cuda.memory._dump_snapshot("2_5.pickle")
-torch.cuda.memory._record_memory_history(enabled=None)
+# torch.cuda.memory._dump_snapshot("2_5.pickle")
+# torch.cuda.memory._record_memory_history(enabled=None)
 
 #------------------
 
@@ -167,4 +167,4 @@ begin_time = time.time()
 Tp3m_B16 = Tp3ma_b16 @ Tp3mb_b16
 Tp3m_B16_time_usage = time.time() - begin_time
 
-print(f"[On GPU]\t Float32 {Tp3m_time_usage}, Float16 {Tp3m_F16_time_usage}, BFloat16 {Tp3m_B16_time_usage}")
+print(f"[On CPU]\t Float32 {Tp3m_time_usage}, Float16 {Tp3m_F16_time_usage}, BFloat16 {Tp3m_B16_time_usage}")

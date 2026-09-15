@@ -33,7 +33,7 @@ def part_one():
         loss = MSE(y_true, y_unnorm)
         return y_unnorm, loss
     
-    data = pd.read_csv("src/Lab4/data/insurance_charges.csv")
+    data = pd.read_csv("/storage/slurm/home/68070701616@cpe.kmutt.ac.th/DeepLearning/src/Lab4/data/insurance_charges.csv")
     
     np.set_printoptions(precision=5, suppress=True)
 
@@ -142,7 +142,7 @@ def part_two():
         return cm
     
     mapping = {"Iris-setosa": 0, "Iris-versicolor": 1}
-    data = pd.read_csv("src/Lab4/data/iris_2class_train.csv")
+    data = pd.read_csv("/storage/slurm/home/68070701616@cpe.kmutt.ac.th/DeepLearning/src/Lab4/data/iris_2class_train.csv")
         
     np.set_printoptions(precision=5, suppress=True)
 
@@ -176,7 +176,7 @@ def part_two():
 
     ########################################################
 
-    test = pd.read_csv("src/Lab4/data/iris_2class_test.csv")
+    test = pd.read_csv("/storage/slurm/home/68070701616@cpe.kmutt.ac.th/DeepLearning/src/Lab4/data/iris_2class_test.csv")
 
     test = test.to_numpy()
     test[:, -1] = np.array([mapping[x] for x in test[:, -1]])
@@ -236,7 +236,7 @@ def part_three():
         return y_unnorm, loss
 
     def regression_task():
-        data = pd.read_csv("src/Lab4/data/insurance_charges.csv")
+        data = pd.read_csv("/storage/slurm/home/68070701616@cpe.kmutt.ac.th/DeepLearning/src/Lab4/data/insurance_charges.csv")
             
         np.set_printoptions(precision=5, suppress=True)
     
@@ -323,7 +323,7 @@ def part_three():
 
     def classification_task():
         mapping = {"Iris-setosa": 0, "Iris-versicolor": 1}
-        data = pd.read_csv("src/Lab4/data/iris_2class_train.csv")
+        data = pd.read_csv("/storage/slurm/home/68070701616@cpe.kmutt.ac.th/DeepLearning/src/Lab4/data/iris_2class_train.csv")
             
         np.set_printoptions(precision=5, suppress=True)
     
@@ -357,7 +357,7 @@ def part_three():
     
         ########################################################
     
-        test = pd.read_csv("src/Lab4/data/iris_2class_test.csv")
+        test = pd.read_csv("/storage/slurm/home/68070701616@cpe.kmutt.ac.th/DeepLearning/src/Lab4/data/iris_2class_test.csv")
     
         test = test.to_numpy()
         test[:, -1] = np.array([mapping[x] for x in test[:, -1]])

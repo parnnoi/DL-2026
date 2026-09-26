@@ -292,7 +292,7 @@ class layer_struct:
     def predict(self, x, threshold=0.5):
         return (self.do_forward(x, False) > threshold).astype(int)
 
-data = pd.read_csv('data/cardio.csv', sep=";")
+data = pd.read_csv('/storage/slurm/home/68070701616@cpe.kmutt.ac.th/DeepLearning/src/Lab4/data/cardio.csv', sep=";")
 # print(data.head())
 # print(data.shape)
 # print(data.max())

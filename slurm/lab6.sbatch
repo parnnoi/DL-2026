@@ -8,7 +8,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --time=00:02:00
 
-DIRECTORY_VENV_ACTIVATE="$HOME/DeepLearning/venv/bin/activate"
+DIRECTORY_VENV_ACTIVATE="$HOME/DeepLearning/.venv/bin/activate"
 DIRECTORY_LAB="$HOME/DeepLearning/src/Lab"
 LAB_SPECIFY="6"
 

@@ -1,4 +1,4 @@
-# Ignore everything in this directory
+# Ignore data folder
 realwaste-main
 # Except this file
 !.gitignore

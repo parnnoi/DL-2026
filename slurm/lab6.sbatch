@@ -4,7 +4,7 @@
 #SBATCH --error=logs/lab6/%j.err
 #SBATCH --partition=gpu4090
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=8G
+#SBATCH --mem=12G
 #SBATCH --gres=gpu:1
 #SBATCH --time=8:00:00
 

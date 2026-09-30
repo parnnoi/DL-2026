@@ -60,6 +60,8 @@ def train(model, train_loader, loss_fn, optimizer, epochs, is_pretrain=False):
         history_loss.append(avg_loss)
         print(f"epoch {epoch+1}  loss = {avg_loss}")
 
+    return history_loss
+
 def evaluate(model, test_loader, is_pretrain=False):
     if is_pretrain:
         model.oval()

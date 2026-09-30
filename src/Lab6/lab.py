@@ -114,8 +114,8 @@ model_1 = nn.Sequential(
 loss_fn_1   = nn.CrossEntropyLoss()
 optimizer_1 = torch.optim.Adam(model_1.parameters(), lr=0.01)
 
-m1loss = train(model_1, train_loader, loss_fn_1, optimizer_1, 100)
-evaluate(model_1)
+m1loss = train(model_1, train_loader, loss_fn_1, optimizer_1, 30)
+evaluate(model_1, test_loader)
 plot_single(m1loss, "Loss", "Epochs", "Loss", "Basic Model Loss", "m1.png")
 
 
@@ -144,8 +144,8 @@ model_2 = nn.Sequential(
 loss_fn_2   = nn.CrossEntropyLoss()
 optimizer_2 = torch.optim.Adam(model_2.parameters(), lr=0.01)
 
-m2loss = train(model_2, train_loader, loss_fn_2, optimizer_2, 100)
-evaluate(model_2)
+m2loss = train(model_2, train_loader, loss_fn_2, optimizer_2, 30)
+evaluate(model_2, test_loader)
 plot_single(m2loss, "Loss", "Epochs", "Loss", "More Detail Model Loss", "m2.png")
 plot_compare(m1loss, "Basic", m2loss, "Advanced", "Epochs", "Loss", "Comparison basic and more detailed model", "cmp1-2.png")
 
@@ -179,6 +179,6 @@ optimizer_3 = torch.optim.Adam(
     [p for p in pretrained_model.parameters() if p.requires_grad], lr=0.0001
 )
 
-m3loss = train(pretrained_model, train_loader, loss_fn_3, optimizer_3, 100)
-evaluate(pretrained_model)
+m3loss = train(pretrained_model, train_loader, loss_fn_3, optimizer_3, 30)
+evaluate(pretrained_model, test_loader)
 plot_single(m3loss, "Loss", "Epochs", "Loss", "More Detail Model Loss", "m3.png")

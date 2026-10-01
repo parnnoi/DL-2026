@@ -46,6 +46,7 @@ class SimpleCNN(nn.Module):
         self.fc3 = nn.Linear(128, 10)
         
         self.relu = nn.ReLU()
+        self.dropout = nn.Dropout(p=0.5) # Drop
 
     def forward(self, x):
         x = self.pool(self.relu(self.conv1(x)))
@@ -54,8 +55,8 @@ class SimpleCNN(nn.Module):
         
         x = x.view(-1, 64 * 4 * 4)
         
-        x = self.relu(self.fc1(x))
-        x = self.relu(self.fc2(x))
+        x = self.dropout(self.relu(self.fc1(x))) # Drop
+        x = self.dropout(self.relu(self.fc2(x))) # Drop
         x = self.fc3(x)
         return x
 
@@ -110,7 +111,7 @@ if __name__ == "__main__":
             loss.backward()
             optimizer.step()
             loss += loss.item()
-        logger.info(f"\tEpoch: {epoch + 1} | Loss: {loss:.3f}")
+        # logger.info(f"\tEpoch: {epoch + 1} | Loss: {loss:.3f}")
         loss = 0.0
     logger.info(f"Training completed")
     logger.info(f"Begin evaluation...")
@@ -127,4 +128,4 @@ if __name__ == "__main__":
             correct += (predicted == labels).sum().item()
 
     accuracy = 100 * correct / total
-    logger.info(f"Accuracy of the network on the test images: {accuracy:.2f}%")
+    logger.info(f"Accuracy of the network on the test images: {accuracy:.2f}% with random seed {seed}")

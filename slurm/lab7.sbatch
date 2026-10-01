@@ -40,5 +40,9 @@ nvidia-smi
 
 echo "=== Execution ==="
 python "$DIRECTORY_LAB$LAB_SPECIFY/simple_cifar10_cnn.py" --config "$DIRECTORY_LAB$LAB_SPECIFY/experiment_01.toml"
+python "$DIRECTORY_LAB$LAB_SPECIFY/simple_cifar10_cnn.py" --config "$DIRECTORY_LAB$LAB_SPECIFY/experiment_02.toml"
+python "$DIRECTORY_LAB$LAB_SPECIFY/simple_cifar10_cnn.py" --config "$DIRECTORY_LAB$LAB_SPECIFY/experiment_03.toml"
+python "$DIRECTORY_LAB$LAB_SPECIFY/simple_cifar10_cnn.py" --config "$DIRECTORY_LAB$LAB_SPECIFY/experiment_04.toml"
+python "$DIRECTORY_LAB$LAB_SPECIFY/simple_cifar10_cnn.py" --config "$DIRECTORY_LAB$LAB_SPECIFY/experiment_05.toml"
 
 echo "Job finished on: $(date)"

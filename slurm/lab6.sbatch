@@ -16,6 +16,15 @@ set -euo pipefail
 
 cd $HOME
 
+START_TIME=$SECONDS
+
+print_elapsed() {
+    local elapsed=$(( SECONDS - START_TIME ))
+    printf "Elapsed time: %02d:%02d:%02d\n" \
+        $(( elapsed / 3600 )) $(( (elapsed % 3600) / 60 )) $(( elapsed % 60 ))
+}
+trap print_elapsed EXIT
+
 echo "=== Host ==="
 echo "Job executed on: $(hostname)"
 echo "Job started on: $(date)"
@@ -28,3 +37,5 @@ echo "Python version: $(python --version)"
 
 echo "=== Execution ==="
 python "$DIRECTORY_LAB$LAB_SPECIFY/lab.py"
+
+echo "Job finished on: $(date)"

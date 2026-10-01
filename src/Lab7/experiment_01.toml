@@ -1,0 +1,23 @@
+[seed]
+manual_seed = true
+seed_value = 1234
+
+[dataset]
+root = "/shared/a2-public/cifar-10"
+batch_size = 64
+
+[optimizer]
+name = "Adam"
+[optimizer.params]
+lr = 0.001
+betas = [0.9, 0.999]
+eps = 1e-08
+weight_decay = 0
+amsgrad = false
+maximize = false
+capturable = false
+differentiable = false
+decoupled_weight_decay = false
+
+[training]
+n_epochs = 50

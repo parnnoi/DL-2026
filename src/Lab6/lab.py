@@ -176,7 +176,8 @@ for param in pretrained_model.fc.parameters():
 
 print("\n FC train")
 optimizer_3 = torch.optim.Adam(pretrained_model.fc.parameters(), lr=0.001)
-train(pretrained_model, train_loader, loss_fn_3, optimizer_3, 30)
+m3loss_1 = train(pretrained_model, train_loader, loss_fn_3, optimizer_3, 30)
+plot_single(m3loss_1, "Loss", "Epochs", "Loss", "More Detail Model Loss", "m3.png")
 
 # ---------- Tune Block 4 ----------
 for param in pretrained_model.trunk_output.block4.parameters():
@@ -187,6 +188,6 @@ optimizer_3 = torch.optim.Adam(
 )
 
 print("\n Block 4 train")
-m3loss = train(pretrained_model, train_loader, loss_fn_3, optimizer_3, 15)
+m3loss_2 = train(pretrained_model, train_loader, loss_fn_3, optimizer_3, 15)
 evaluate(pretrained_model, test_loader)
-plot_single(m3loss, "Loss", "Epochs", "Loss", "More Detail Model Loss", "m3.png")
+plot_single(m3loss_2, "Loss", "Epochs", "Loss", "More Detail Model Loss", "m3.png")

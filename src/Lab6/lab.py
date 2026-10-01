@@ -172,7 +172,7 @@ for param in pretrained_model.parameters():
 for param in pretrained_model.fc.parameters():
     param.requires_grad = True
 
-optimizer_3 = torch.optim.Adam(pretrained_model.fc.parameters(), lr=0.0001)
+optimizer_3 = torch.optim.Adam(pretrained_model.fc.parameters(), lr=0.001)
 train(pretrained_model, train_loader, loss_fn_3, optimizer_3, 3)
 
 # ---------- Tune Block 4 ----------
@@ -187,25 +187,3 @@ print("\n\n ####### Start training Model 3 ######\n")
 m3loss = train(pretrained_model, train_loader, loss_fn_3, optimizer_3, 15)
 evaluate(pretrained_model, test_loader)
 plot_single(m3loss, "Loss", "Epochs", "Loss", "More Detail Model Loss", "m3.png")
-
-
-model_1 = nn.Sequential(
-    nn.Conv2d(3, 16, 3),
-    nn.ReLU(),
-    nn.Conv2d(16, 32, 3),
-    nn.ReLU(),
-    nn.Conv2d(32, 64, 3),
-    nn.ReLU(),
-    nn.Conv2d(64, 64, 3),
-    nn.ReLU(),
-
-    nn.Conv2d(64, num_classes, 3),
-    nn.AdaptiveAvgPool2d(1),
-    nn.Flatten(),
-).to(device)
-
-loss_fn_1   = nn.CrossEntropyLoss()
-optimizer_1 = torch.optim.Adam(model_1.parameters(), lr=0.01)
-
-m1loss = train(model_1, train_loader, loss_fn_1, optimizer_1, 30)
-evaluate(model_1, test_loader)

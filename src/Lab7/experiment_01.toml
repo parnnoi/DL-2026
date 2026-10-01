@@ -1,6 +1,6 @@
 [seed]
 manual_seed = true
-seed_value = 6767
+seed_value = 9876
 
 [dataset]
 root = "/shared/a2-public/cifar-10"

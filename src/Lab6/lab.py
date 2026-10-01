@@ -117,7 +117,7 @@ loss_fn_1   = nn.CrossEntropyLoss()
 optimizer_1 = torch.optim.Adam(model_1.parameters(), lr=0.001)
 
 print("\n\n ####### Start training Model 1 ######\n")
-m1loss = train(model_1, train_loader, loss_fn_1, optimizer_1, 15)
+m1loss = train(model_1, train_loader, loss_fn_1, optimizer_1, 30)
 evaluate(model_1, test_loader)
 plot_single(m1loss, "Loss", "Epochs", "Loss", "Basic Model Loss", "m1.png")
 
@@ -148,7 +148,7 @@ loss_fn_2   = nn.CrossEntropyLoss()
 optimizer_2 = torch.optim.Adam(model_2.parameters(), lr=0.001)
 
 print("\n\n ####### Start training Model 2 ######\n")
-m2loss = train(model_2, train_loader, loss_fn_2, optimizer_2, 15)
+m2loss = train(model_2, train_loader, loss_fn_2, optimizer_2, 30)
 evaluate(model_2, test_loader)
 plot_single(m2loss, "Loss", "Epochs", "Loss", "More Detail Model Loss", "m2.png")
 plot_compare(m1loss, "Basic", m2loss, "Advanced", "Epochs", "Loss", "Comparison basic and more detailed model", "cmp1-2.png")
@@ -166,14 +166,17 @@ pretrained_model.fc = nn.Linear(pretrained_model.fc.in_features, num_classes) # 
 pretrained_model = pretrained_model.to(device)
 loss_fn_3 = nn.CrossEntropyLoss()
 
+print("\n\n ####### Start training Model 3 ######\n")
+
 # ---------- Fully connected ----------
 for param in pretrained_model.parameters():
     param.requires_grad = False
 for param in pretrained_model.fc.parameters():
     param.requires_grad = True
 
+print("\n FC train")
 optimizer_3 = torch.optim.Adam(pretrained_model.fc.parameters(), lr=0.001)
-train(pretrained_model, train_loader, loss_fn_3, optimizer_3, 3)
+train(pretrained_model, train_loader, loss_fn_3, optimizer_3, 30)
 
 # ---------- Tune Block 4 ----------
 for param in pretrained_model.trunk_output.block4.parameters():
@@ -183,7 +186,7 @@ optimizer_3 = torch.optim.Adam(
     [p for p in pretrained_model.parameters() if p.requires_grad], lr=0.0001
 )
 
-print("\n\n ####### Start training Model 3 ######\n")
+print("\n Block 4 train")
 m3loss = train(pretrained_model, train_loader, loss_fn_3, optimizer_3, 15)
 evaluate(pretrained_model, test_loader)
 plot_single(m3loss, "Loss", "Epochs", "Loss", "More Detail Model Loss", "m3.png")

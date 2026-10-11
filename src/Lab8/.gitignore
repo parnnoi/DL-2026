@@ -1,0 +1,4 @@
+# Ignore data folder
+lstm_lm_best.pt
+# Except this file
+!.gitignore

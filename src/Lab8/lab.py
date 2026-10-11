@@ -27,7 +27,7 @@ def batchify(data, batch_size):
 
 def get_batches(source, seq_len):
     for i in range(0, source.size(1) - 1, seq_len): # From 0 to n with seq_len steps
-        print(i)
+        # print(i)
         length = min(seq_len, source.size(1) - 1 - i) # get length (noemallu is seq_size but sometime last round maybe smaller than seq_len)
         x = source[:, i : i + length] # from start to stop
         y = source[:, i + 1 : i + 1 + length] # next element of x sequence

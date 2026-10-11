@@ -1,8 +1,15 @@
 import torch
 import torch.nn as nn
 import math
+import matplotlib.pyplot as plt
+import numpy as np
 
-device = "mps" if torch.backends.mps.is_available() else "cpu"
+if torch.backends.mps.is_available():
+    device = "mps"
+elif torch.cuda.is_available():
+    device = "cuda"
+else:
+    device = "cpu"
 
 text = open("/storage/slurm/home/68070701616@cpe.kmutt.ac.th/DeepLearning/src/Lab8/data/clean.txt", encoding="utf-8").read()
 
@@ -80,6 +87,10 @@ best_val = float("inf")
 seq_len = 128
 epochs = 40
 
+train_loss_history = []
+val_loss_history = []
+ppl_loss_history = []
+
 for epoch in range(epochs):
     model.train()
     hidden, total, steps = None, 0.0, 0
@@ -100,7 +111,12 @@ for epoch in range(epochs):
         steps += 1
 
     train_loss = total / steps
+    train_loss_history.append(train_loss)
+
     val_loss = evaluate(model, val_data, seq_len)
+    val_loss_history.append(val_loss)
+    ppl_loss_history.append(math.exp(val_loss))
+
     print(f"epoch {epoch:2d}  train {train_loss:.3f}  val {val_loss:.3f} ppl {math.exp(val_loss):.2f}")
 
     # Best pleaseeeee
@@ -108,6 +124,31 @@ for epoch in range(epochs):
         best_val = val_loss
         torch.save({"model_state": model.state_dict(), "vocab_size": vocab_size,
                     "stoi": stoi, "itos": itos}, "lstm_lm_best.pt")
+
+# ----------------------------------- PLOT ------------------
+
+def plot_single(data, data_lab, xlab, ylab, tit, save_name, save_dir="/storage/slurm/home/68070701616@cpe.kmutt.ac.th/DeepLearning/src/Lab8/Results/"):
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    ax.plot(np.arange(len(data)), data, lw=2, label=data_lab)
+    ax.set(xlabel=xlab, ylabel=ylab, title=tit)
+    fig.savefig(save_dir + save_name)
+    # plt.show()
+
+def plot_compare(data_1, data_1_lab, data_2, data_2_lab, xlab, ylab, tit, save_name, save_dir="/storage/slurm/home/68070701616@cpe.kmutt.ac.th/DeepLearning/src/Lab8/Results/"):
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    ax.plot(np.arange(len(data_1)), data_1, lw=2, label=data_1_lab)
+    ax.plot(np.arange(len(data_2)), data_2, lw=2, label=data_2_lab)
+    ax.set(xlabel=xlab, ylabel=ylab, title=tit)
+    # ax.set_ylim(top=1)
+    # ax.set_xlim(xmax=2000, xmin=0)
+    plt.legend()
+    # plt.show()
+    fig.savefig(save_dir + save_name)
+
+plot_single(train_loss_history, "Training loss", "Epochs", "Loss", "Training Loss", "t.png")
+plot_single(val_loss_history, "Validation loss", "Epochs", "Loss", "Validation Loss", "v.png")
+plot_single(ppl_loss_history, "Perplexity", "Epochs", "ppl", "Perplexity", "p.png")
+plot_compare(train_loss_history, "Training loss", val_loss_history, "Validation loss", "Epochs", "Loss", "Train and Validation Loss Comparison", "cp.png")
 
 # ----------------------------------- Generate Section -------------------------------------
 

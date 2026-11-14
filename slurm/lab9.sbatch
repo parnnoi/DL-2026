@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --job-name=Pipat_Lab8
-#SBATCH --output=logs/lab8/%j.log
-#SBATCH --error=logs/lab8/%j.err
-#SBATCH --partition=gpu4090
+#SBATCH --job-name=Pipat_Lab9
+#SBATCH --output=logs/lab9/%j.log
+#SBATCH --error=logs/lab9/%j.err
+#SBATCH --partition=gpu3060
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=12G
 #SBATCH --gres=gpu:1

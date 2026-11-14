@@ -2,7 +2,7 @@
 #SBATCH --job-name=Pipat_Lab8
 #SBATCH --output=logs/lab8/%j.log
 #SBATCH --error=logs/lab8/%j.err
-#SBATCH --partition=gpul40
+#SBATCH --partition=gpu4090
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=12G
 #SBATCH --gres=gpu:1

@@ -43,7 +43,7 @@ val_data = batchify(data[split:], batch_size=32)
 class LSTMLanguageModel(nn.Module):
     def __init__(self, vocab_size, embed_dim=256, dropout=0.3):
         super().__init__()
-        self.embedding = nn.Embedding(vocab_size, embed_dim)
+        self.embedding = nn.Embedding(vocab_size, embed_dim) 
         self.drop = nn.Dropout(dropout)
         self.lstm1 = nn.LSTM(embed_dim, 512, batch_first=True)
         self.lstm2 = nn.LSTM(512, embed_dim, batch_first=True)
@@ -190,7 +190,6 @@ def generate(model, prompt, length=500, temperature=0.8, top_k=20):
 
     return result
 
-# load check point and to it.
 ckpt = torch.load("lstm_lm_best.pt", map_location=device)
 
 stoi, itos = ckpt["stoi"], ckpt["itos"]

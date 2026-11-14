@@ -531,7 +531,7 @@ def model_summary(model):
 
 #------------------ Translate work
 
-def translate_sentence(sentence, model, tokenizer, device, max_len=50):
+def summary(sentence, model, tokenizer, device, max_len=50):
     model.eval()
     
     # Tokenize the source sentence
@@ -561,9 +561,9 @@ def translate_sentence(sentence, model, tokenizer, device, max_len=50):
             
     # Decode the generated IDs back into a string
     # Drop the initial SOS token at the start, and skip_special_tokens removes the EOS
-    translated_text = tokenizer.decode(tgt_indices[1:], skip_special_tokens=True)
+    summarized_text = tokenizer.decode(tgt_indices[1:], skip_special_tokens=True)
     
-    return translated_text
+    return summarized_text
 
 class NoamOptim(object):
     """ Optimizer wrapper for learning rate scheduling.
@@ -637,6 +637,7 @@ def train_fn(model, iterator, optimizer, criterion, clip=1.0):
 
 import evaluate
 from tqdm.auto import tqdm
+from bert_score import BERTScorer
 
 # Load the modern BLEU metric
 metric = evaluate.load("sacrebleu")
@@ -694,6 +695,12 @@ def eval_fn(model, iterator, criterion, tokenizer):
     bleu_result = metric.compute(predictions=hypotheses, references=references)
     bleu4 = bleu_result["score"]
 
+    scorer = BERTScorer(lang="en", rescale_with_baseline=True, device=device)
+    P, R, F1 = scorer.score(hypotheses, references)   # lists of str, same length
+    bertscore_f1 = F1.mean().item()
+
+    print(f"Summary F1 Score (bert): = {bertscore_f1}")
+
     return hypotheses, perplexity, bleu4
 
 #----------------------------   Training
@@ -749,7 +756,7 @@ for epoch in range(0, N_EPOCHS + 1):
     ground_truth_text = tokenizer.decode(sample_target_ids, skip_special_tokens=True)
     
     # Generate the model's translation
-    model_translation = translate_sentence(random_source_text, model, tokenizer, device)
+    model_translation = summary(random_source_text, model, tokenizer, device)
 
     print(f"\n--- Epoch {epoch} Random Translation Sample ---")
     print(f"Source:      {random_source_text}")

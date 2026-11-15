@@ -42,7 +42,7 @@ base = "hf://datasets/abisee/cnn_dailymail/1.0.0"
 
 # import file from all training file and concat datasets
 train_df = pd.concat(
-    [pd.read_parquet(f"{base}/train-{i:05d}-of-00003.parquet") for i in range(3)],
+    [pd.read_parquet(f"{base}/train-{i:05d}-of-00003.parquet") for i in range(1)],
     ignore_index=True,
 )
 valid_df   = pd.read_parquet(f"{base}/validation-00000-of-00001.parquet")

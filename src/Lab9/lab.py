@@ -85,7 +85,7 @@ data_collator = DataCollatorForSeq2Seq(
     return_tensors="pt"
 )
 
-BATCH_SIZE = 50
+BATCH_SIZE = 8
 
 train_iterator = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=data_collator)
 valid_iterator = DataLoader(valid_dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=data_collator)

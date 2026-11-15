@@ -635,12 +635,11 @@ def train_fn(model, iterator, optimizer, criterion, clip=1.0):
 
     return output, perplexity
 
-import evaluate
 from tqdm.auto import tqdm
 from bert_score import BERTScorer
 
-# Load the modern BLEU metric
-metric = evaluate.load("sacrebleu")
+# Load the BERTScore metric (created once, it loads roberta-large)
+scorer = BERTScorer(lang="en", rescale_with_baseline=True, device=device)
 
 def eval_fn(model, iterator, criterion, tokenizer):
     model.eval()
@@ -678,11 +677,11 @@ def eval_fn(model, iterator, criterion, tokenizer):
             # The target needs to be shifted by 1 to match the output predictions
             decoded_targets = tokenizer.batch_decode(target[:, 1:], skip_special_tokens=True)
 
-            # Store texts for BLEU calculation
+            # Store texts for BERTScore calculation
             hypotheses.extend(decoded_preds)
-            
-            # SacreBLEU expects references to be a list of lists (in case of multiple valid translations)
-            references.extend([[t] for t in decoded_targets])
+
+            # BERTScore expects references to be a list of strings
+            references.extend(decoded_targets)
 
             tk0.set_postfix(loss=total_loss/steps)
 
@@ -691,17 +690,11 @@ def eval_fn(model, iterator, criterion, tokenizer):
     # Calculate Perplexity
     perplexity = np.exp(total_loss / len(iterator))
     
-    # Calculate BLEU score using the evaluate library
-    bleu_result = metric.compute(predictions=hypotheses, references=references)
-    bleu4 = bleu_result["score"]
+    # Calculate BERTScore (F1) using the bert_score library
+    P, R, F1 = scorer.score(hypotheses, references)
+    bert_f1 = F1.mean().item()
 
-    scorer = BERTScorer(lang="en", rescale_with_baseline=True, device=device)
-    P, R, F1 = scorer.score(hypotheses, references)   # lists of str, same length
-    bertscore_f1 = F1.mean().item()
-
-    print(f"Summary F1 Score (bert): = {bertscore_f1}")
-
-    return hypotheses, perplexity, bertscore_f1
+    return hypotheses, perplexity, bert_f1
 
 #----------------------------   Training
 
@@ -730,7 +723,7 @@ optimizer = NoamOptim(
 
 criterion = nn.CrossEntropyLoss(ignore_index=PAD_IDX)
 
-best_bleu4 = float('-inf')
+best_bert = float('-inf')
 es_patience = 100
 patience = 0
 model_path = 'model.pth'
@@ -741,9 +734,9 @@ for epoch in range(0, N_EPOCHS + 1):
     _, train_perplexity = train_fn(model, train_iterator, optimizer, criterion, CLIP)
 
     # one epoch validation
-    _, valid_perplexity, valid_bleu4 = eval_fn(model, valid_iterator, criterion, tokenizer)
+    _, valid_perplexity, valid_bert = eval_fn(model, valid_iterator, criterion, tokenizer)
 
-    print(f'Epoch: {epoch}, Train perplexity: {train_perplexity:.4f}, Valid perplexity: {valid_perplexity:.4f}, Valid BLEU4: {valid_bleu4:.4f}')
+    print(f'Epoch: {epoch}, Train perplexity: {train_perplexity:.4f}, Valid perplexity: {valid_perplexity:.4f}, Valid BERTScore: {valid_bert:.4f}')
 
     random_idx = np.random.randint(0, len(train_dataset) - 1)
     
@@ -764,18 +757,18 @@ for epoch in range(0, N_EPOCHS + 1):
     print(f"Translation: {model_translation}")
     print("-" * 60 + "\n")
     
-    # early stopping (blue is bert but not change naming)
-    is_best = valid_bleu4 > best_bleu4
+    # early stopping
+    is_best = valid_bert > best_bert
     if is_best:
-        print(f'BLEU score improved ({best_bleu4:.4f} -> {valid_bleu4:.4f}). Saving Model!')
-        best_bleu4 = valid_bleu4
+        print(f'BERTScore improved ({best_bert:.4f} -> {valid_bert:.4f}). Saving Model!')
+        best_bert = valid_bert
         patience = 0
         torch.save(model.state_dict(), model_path)
     else:
         patience += 1
         print(f'Early stopping counter: {patience} out of {es_patience}')
         if patience == es_patience:
-            print(f'Early stopping! Best BLEU4: {best_bleu4:.4f}')
+            print(f'Early stopping! Best BERTScore: {best_bert:.4f}')
             break
     print(f'{"_"*120}')
 
@@ -783,8 +776,8 @@ for epoch in range(0, N_EPOCHS + 1):
 model.load_state_dict(torch.load(model_path, map_location=device))
 
 print('Evaluating the model on test data ...')
-_, test_perplexity, test_bleu4 = eval_fn(model, test_iterator, criterion, tokenizer)
-print(f'Test perplexity: {test_perplexity:.4f}, Test BERT: {test_bleu4:.4f}')
+_, test_perplexity, test_bert = eval_fn(model, test_iterator, criterion, tokenizer)
+print(f'Test perplexity: {test_perplexity:.4f}, Test BERTScore: {test_bert:.4f}')
 
 def translate_and_get_attention(sentence, model, tokenizer, device, max_len=50):
     model.eval()

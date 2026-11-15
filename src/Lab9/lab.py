@@ -720,7 +720,7 @@ model_summary(model)
 
 optimizer = NoamOptim(
     optim.Adam(model.parameters(), lr=1e-4, betas=(0.9, 0.98), eps=1e-9),
-    model.encoder.d_model, 2, 4000
+    model.encoder.d_model, 1, 4000
 )
 
 criterion = nn.CrossEntropyLoss(ignore_index=PAD_IDX)

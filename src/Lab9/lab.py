@@ -42,7 +42,7 @@ base = "hf://datasets/abisee/cnn_dailymail/1.0.0"
 
 # import file from all training file and concat datasets
 train_df = pd.concat(
-    [pd.read_parquet(f"{base}/train-{i:05d}-of-00003.parquet") for i in range(1)],
+    [pd.read_parquet(f"{base}/train-{i:05d}-of-00003.parquet") for i in range(3)],
     ignore_index=True,
 )
 valid_df   = pd.read_parquet(f"{base}/validation-00000-of-00001.parquet")
@@ -60,7 +60,7 @@ test_dataset = Dataset.from_pandas(test_df)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-tokenizer = AutoTokenizer.from_pretrained("bert-base-multilingual-cased")
+tokenizer = AutoTokenizer.from_pretrained("bert-base-cased")
 
 def tokenize_fn(examples):
     model_inputs = tokenizer(examples['source'], truncation=True, max_length=128)
@@ -256,13 +256,15 @@ class PositionalEncoding(nn.Module):
         )  # (d_model,)
         pe[:, 0::2] = torch.sin(position * div_term)
         pe[:, 1::2] = torch.cos(position * div_term)
-        pe = pe.unsqueeze(0).transpose(0, 1)  # (max_len, 1, d_model)
+        # pe = pe.unsqueeze(0).transpose(0, 1)  # (max_len, 1, d_model)
+        pe = pe.unsqueeze(0)
         self.register_buffer('pe', pe)
 
     def forward(self, x):
         """ x: (batch_size, seq_len, d_model)
         """
-        x = x + self.pe[:x.size(0), :]  # (batch_size, seq_len, d_model)
+        # x = x + self.pe[:x.size(0), :]  # (batch_size, seq_len, d_model)
+        x = x + self.pe[:, :x.size(1), :]
         x = self.dropout(x)  # (batch_size, seq_len, d_model)
 
         # x: (batch_size, seq_len, d_model)
@@ -751,10 +753,10 @@ for epoch in range(0, N_EPOCHS + 1):
     # Generate the model's translation
     model_translation = summary(random_source_text, model, tokenizer, device)
 
-    print(f"\n--- Epoch {epoch} Random Translation Sample ---")
+    print(f"\n--- Epoch {epoch} Random Summarization Sample ---")
     print(f"Source:      {random_source_text}")
     print(f"Target:      {ground_truth_text}")
-    print(f"Translation: {model_translation}")
+    print(f"Summarization: {model_translation}")
     print("-" * 60 + "\n")
     
     # early stopping
@@ -833,7 +835,7 @@ def plot_attention(sentence, model, tokenizer, device):
     )
     
     print(f"Source:      {sentence}")
-    print(f"Translation: {translation}")
+    print(f"Summarization: {translation}")
     
     # attention shape is (n_heads, target_len, source_len)
     n_heads = attention.shape[0]
@@ -884,6 +886,7 @@ def plot_attention(sentence, model, tokenizer, device):
     plt.suptitle("Multi-Head Attention Alignment", fontsize=16, y=1.02)
     plt.tight_layout()
     plt.show()
+    plt.savefig('1.png')
 
 example_idx = 1
 

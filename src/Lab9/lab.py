@@ -85,7 +85,7 @@ data_collator = DataCollatorForSeq2Seq(
     return_tensors="pt"
 )
 
-BATCH_SIZE = 8
+BATCH_SIZE = 50
 
 train_iterator = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=data_collator)
 valid_iterator = DataLoader(valid_dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=data_collator)
@@ -701,7 +701,7 @@ def eval_fn(model, iterator, criterion, tokenizer):
 
     print(f"Summary F1 Score (bert): = {bertscore_f1}")
 
-    return hypotheses, perplexity, bleu4
+    return hypotheses, perplexity, bertscore_f1
 
 #----------------------------   Training
 
@@ -764,7 +764,7 @@ for epoch in range(0, N_EPOCHS + 1):
     print(f"Translation: {model_translation}")
     print("-" * 60 + "\n")
     
-    # early stopping
+    # early stopping (blue is bert but not change naming)
     is_best = valid_bleu4 > best_bleu4
     if is_best:
         print(f'BLEU score improved ({best_bleu4:.4f} -> {valid_bleu4:.4f}). Saving Model!')
@@ -784,7 +784,7 @@ model.load_state_dict(torch.load(model_path, map_location=device))
 
 print('Evaluating the model on test data ...')
 _, test_perplexity, test_bleu4 = eval_fn(model, test_iterator, criterion, tokenizer)
-print(f'Test perplexity: {test_perplexity:.4f}, Test BlEU4: {test_bleu4:.4f}')
+print(f'Test perplexity: {test_perplexity:.4f}, Test BERT: {test_bleu4:.4f}')
 
 def translate_and_get_attention(sentence, model, tokenizer, device, max_len=50):
     model.eval()

@@ -8,18 +8,24 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
+    "accelerate>=1.16.0",
     "asciichartpy>=1.5.25",
     "bert-score>=0.3.13",
+    "bitsandbytes>=0.50.2",
     "datasets>=5.2.0",
     "einops>=0.8.2",
     "evaluate>=0.4.6",
+    "flash-linear-attention>=0.6.0",
     "huggingface-hub>=2.4.0",
     "ipykernel>=7.3.0",
+    "loralib>=0.1.2",
     "matplotlib>=3.11.1",
     "numpy>=2.5.2",
     "pandas>=3.0.5",
+    "peft>=0.21.3",
     "pyarrow>=26.0.1",
     "sacrebleu>=2.6.0",
+    "safetensors>=0.8.0",
     "scikit-learn>=1.9.1",
     "seaborn>=0.13.2",
     "toml>=0.10.2",
@@ -27,6 +33,7 @@ dependencies = [
     "torchvision>=0.28.0",
     "tqdm>=4.70.1",
     "transformers>=5.22.2",
+    "trl>=1.18.0",
 ]
 
 [project.scripts]

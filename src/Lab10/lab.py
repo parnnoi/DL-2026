@@ -174,8 +174,8 @@ for ins in instruction:
     if ins["input"]:
         print(f"Input: {ins['input']}")
 
-    base_out = base_generator(ins, generation_config=generation_config)[0]["generated_text"]
-    lora_out = adapted_generator(ins, generation_config=generation_config)[0]["generated_text"]
+    base_out = base_generator(prompt, generation_config=generation_config)[0]["generated_text"]
+    lora_out = adapted_generator(prompt, generation_config=generation_config)[0]["generated_text"]
 
     print("\n--- Base model ---")
     print(base_out)

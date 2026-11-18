@@ -162,8 +162,9 @@ def build_prompt(instruction, input_text=""):
 
 instruction = [
     {"instruction": "Give three tips for staying healthy.", "input": ""},
-    {"instruction": "Summarize the following text.", "input": "Leptin is a hormone secreted by adipocytes..."},
-    {"instruction": "What is the role of the blood-brain barrier?", "input": ""},
+    {"instruction": "How can one minimise wastage of water?", "input": ""},
+    {"instruction": "Design a difficulty-based punishment for a crime. Output the punishment.", "input": "Robbery"},
+    {"instruction": "Summarize the given passage.", "input": "A recent study showed that global climate change is one of the most important challenges facing the world today. The consequences of global warming include rising sea levels, extreme weather events and biodiversity loss. Climate change is caused by human activities such as burning fossil fuels, and if unchecked will have long-term and devastating impacts on the planet."},
 ]
 
 for ins in instruction:
